@@ -1,0 +1,35 @@
+<ng-container *ngIf="menuItems">
+  <ng-container *ngFor="let section of menuItems">
+  <mat-expansion-panel
+    class="menu-section mat-expansion-panel--custom"
+    [expanded]="section.isActive">
+    <mat-expansion-panel-header
+      [collapsedHeight]="'48px'"
+      [expandedHeight]="'48px'">
+      <mat-panel-title
+        [class.active]="section.isActive"
+        class="d-flex align-items-center">
+        <mat-icon *ngIf="section.icon">{{ section.icon }}</mat-icon>
+        <span class="title__text">{{ section.name }}</span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-nav-list *ngIf="section.pages">
+      <ng-container *ngFor="let page of section.pages">
+        <ng-container>
+          <a
+            [routerLink]="'/' + section.route + '/' + page.route"
+            [routerLinkActive]="'active'"
+            mat-list-item
+            class="menu-item"
+            (click)="pageClick(section, page)">
+            <span class="child-page-text">{{ page.name }}</span>
+            
+          </a>
+        </ng-container>
+      </ng-container>
+    </mat-nav-list>
+  </mat-expansion-panel>
+  </ng-container>
+</ng-container>
+

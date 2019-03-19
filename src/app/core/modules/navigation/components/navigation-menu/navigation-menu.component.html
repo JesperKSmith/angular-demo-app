@@ -1,32 +1,43 @@
 <ng-container *ngIf="menuItems">
   <ng-container *ngFor="let section of menuItems">
-  <mat-expansion-panel
+    <mat-nav-list *ngIf="!section.pages">
+        <div class="menu-item">
+          <a [routerLink]="'/' + section.route"
+             [routerLinkActive]="'active'"
+             mat-list-item
+            >
+            <span class="child-page-text">
+              <i class="material-icons" *ngIf="section.icon">{{ section.icon }}</i> 
+              {{ section.name }}
+            </span>            
+          </a>
+        </div>
+      </mat-nav-list>
+  <mat-expansion-panel  *ngIf="section.pages"
     class="menu-section mat-expansion-panel--custom"
-    [expanded]="section.isActive">
+    [expanded]="section.isActive">    
     <mat-expansion-panel-header
       [collapsedHeight]="'48px'"
       [expandedHeight]="'48px'">
-      <mat-panel-title
-        [class.active]="section.isActive"
-        class="d-flex align-items-center">
+      <mat-panel-title [class.active]="section.isActive">
         <mat-icon *ngIf="section.icon">{{ section.icon }}</mat-icon>
         <span class="title__text">{{ section.name }}</span>
       </mat-panel-title>
     </mat-expansion-panel-header>
+    
 
     <mat-nav-list *ngIf="section.pages">
       <ng-container *ngFor="let page of section.pages">
-        <ng-container>
-          <a
-            [routerLink]="'/' + section.route + '/' + page.route"
-            [routerLinkActive]="'active'"
-            mat-list-item
-            class="menu-item"
-            (click)="pageClick(section, page)">
-            <span class="child-page-text">{{ page.name }}</span>
-            
+        <div class="menu-item">
+          <a [routerLink]="'/' + section.route + '/' + page.route"
+             [routerLinkActive]="'active'"
+             mat-list-item>
+            <span class="child-page-text">
+              <i class="material-icons">{{ page.icon }}</i> 
+              {{ page.name }}
+            </span>            
           </a>
-        </ng-container>
+        </div>
       </ng-container>
     </mat-nav-list>
   </mat-expansion-panel>

@@ -1,0 +1,12 @@
+<ng-template #content>
+  <ng-content></ng-content>
+</ng-template>
+<div *ngIf="linkConstructor">
+  <a href="javascript: void(0)" [rowLinkConstructor]="linkConstructor" [row]="row">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </a>
+</div>
+<div *ngIf="!linkConstructor">
+  <ng-container *ngTemplateOutlet="content"></ng-container>
+</div>
+

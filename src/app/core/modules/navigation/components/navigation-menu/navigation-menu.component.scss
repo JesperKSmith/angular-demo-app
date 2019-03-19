@@ -1,0 +1,21 @@
+.menu-item {
+  width: 100%;
+  a {
+    display: inline-flex;
+    vertical-align: middle;
+    span {
+      i {
+        display: inline-flex;
+        vertical-align: middle;
+        margin-bottom: 5px;
+        font-weight: 200;
+      }
+    }
+  }
+}
+
+.menu-section {
+  mat-panel-title {
+    display: flex;    
+  }
+}

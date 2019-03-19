@@ -1,0 +1,13 @@
+<p>
+  table-page works!
+</p>
+
+<app-table 
+  [itemModel]="itemModel" 
+  [itemsCollection]="tableArray" 
+  [componentsRefs]="{delete: [deleteCell]}">
+</app-table>
+
+<ng-template #deleteCell let-item="item">
+  <mat-icon (click)="remove(item)">delete</mat-icon>
+</ng-template>

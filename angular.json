@@ -28,6 +28,7 @@
             ],
             "styles": [
               "src/styles.scss"
+              // "src/app/layout/styling"
             ],
             "scripts": [],
             "es5BrowserSupport": true

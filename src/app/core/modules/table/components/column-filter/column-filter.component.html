@@ -1,0 +1,70 @@
+<mat-card (click)="$event.stopPropagation()" [hidden]="!isVisible">
+  <mat-card-content>
+    <div class="name">
+      <mat-icon class="filter-list font-title-3 color-gray-1">filter_list</mat-icon>
+      <span class="column-filter-name color-gray-1 font-title-4 font-weight-bold">Filter {{name}}</span>
+    </div>
+    <div *ngIf="field" [ngSwitch]="field.type">
+      <div *ngSwitchCase="'date'">
+
+        <div class="d-flex">
+          <!-- Maybe also import date picker -->
+          <!-- <app-wt-date-picker [(ngModel)]="dateValue"
+                              (dateChanged)="changeDate($event)"
+                              [placeholder]="'Select date'"></app-wt-date-picker> -->
+          <button *ngIf="dateValue" mat-icon-button
+                  (click)="$event.stopPropagation(); clearInput(field.type);"
+                  matSuffix>
+            <mat-icon class="font-default"> clear</mat-icon>
+          </button>
+        </div>
+
+      </div>
+      <div *ngSwitchCase="'char'">
+
+        <mat-form-field>
+          <input disabled matInput [formControl]="columnControl" maxlength="1" placeholder="Search">
+          <button *ngIf="columnControl.value" mat-icon-button
+                  (click)="$event.stopPropagation(); clearInput(field.type);"
+                  matSuffix>
+            <mat-icon> clear</mat-icon>
+          </button>
+        </mat-form-field>
+
+      </div>
+      <div *ngSwitchDefault>
+
+        <mat-form-field *ngIf="field.filterOptions && field.filterOptions.length; else defaultFilter">
+          <mat-select [formControl]="columnControl"
+                      placeholder="{{'select_filter'}}">
+            <mat-option *ngIf="columnControl.value" mat-icon-button
+                        (click)="$event.stopPropagation(); clearInput(field.type);">
+              <span>
+                Clear filter
+              </span>
+              <mat-icon class="clear-filter-icon">
+                clear
+              </mat-icon>
+            </mat-option>
+            <mat-option *ngFor="let option of field.filterOptions" value={{option}}>
+              {{option}}
+            </mat-option>
+
+          </mat-select>
+        </mat-form-field>
+
+        <ng-template #defaultFilter>
+          <mat-form-field>
+            <input disabled matInput [formControl]="columnControl" placeholder="Search">
+            <button *ngIf="columnControl.value" mat-icon-button
+                    (click)="$event.stopPropagation(); clearInput(field.type);"
+                    matSuffix>
+              <mat-icon> clear</mat-icon>
+            </button>
+          </mat-form-field>
+        </ng-template>
+
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

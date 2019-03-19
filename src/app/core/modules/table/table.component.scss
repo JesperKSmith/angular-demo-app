@@ -1,0 +1,246 @@
+// @import 'colors';
+
+$primary:   #55be8c;
+$secondary: #1c4d63;
+$accent:    #e95c31;
+$danger:    #f44336;
+$expired:   #e9d75d;
+
+$primary-light:   #e3f2ed;
+$secondary-light: #e1ebf1;
+
+$black:  #000000;
+$gray-1: #999999;
+$gray-2: #cccccc;
+$gray-3: #dddddd;
+$gray-4: #f2f2f2;
+$gray-5: #6c757d;
+$white:  #ffffff;
+
+.pages-filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+
+  mat-form-field {
+    font-size: 1.3rem;
+    position: relative;
+    right: 2rem;
+  }
+}
+
+.transparent {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.column-link {
+  cursor: pointer;
+}
+
+.table-bottom {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mat-header-cell.mat-sort-header-sorted {
+  color: $black;
+}
+
+.ref-component--header{
+  display: inline-block;
+}
+
+mat-paginator {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  display: inline;
+  margin-top: 5px;
+}
+
+.ref-component {
+  max-width: 100%;
+  /deep/ mat-form-field {
+    max-width: 100%;
+  }
+}
+
+.header-cell {
+  position: relative;
+  overflow: visible;
+  button {
+    font-size: 2.1rem !important;
+  }
+}
+
+.arrow-down-icon {
+  position: absolute;
+  right: -30px;
+  top: -5px;
+}
+
+.column-title {
+  position: relative;
+  display: inline-block;
+}
+
+.column-filter {
+  position: absolute;
+  left: 0;
+  top: 20px;
+}
+
+.table-value-list {
+  &--money {
+    margin-left: auto;
+    .table-view-value {
+      box-sizing: border-box;
+      padding-right: 15px;
+    }
+  }
+}
+
+.mat-sort-header-button, .mat-sort-header-arrow {
+  display: inline-block;
+}
+
+.title {
+  display: inline-block;
+}
+
+.mat-column-select {
+  overflow: visible;
+  flex-basis: 40px;
+}
+
+/deep/ .mat-icon.filter-list {
+  position: relative;
+  left: -9px;
+}
+
+.right-align {
+  /deep/ .mat-card-content .name,
+  .table-value-list,
+  .mat-cell,
+  /deep/ .mat-form-field-label
+  {
+    text-align: right;
+  }
+
+  /deep/ .mat-input-element {
+    direction: RTL;
+    text-align: right;
+  }
+
+  .column-title, .mat-checkbox {
+    float: right;
+  }
+}
+
+mat-header-row {
+  border-bottom: gray;
+}
+
+.sms-table-row-expanded {
+  transition: all .3s ease-in-out;
+  transform: rotate(-90deg);
+}
+
+.sms-table-row-hidden {
+  transition: all .3s ease-in-out;
+  transform: rotate(0deg);
+}
+
+.row_disabled {
+  position: relative;
+  &:before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: $gray-1;
+    z-index: 1000;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+:host {
+  @media print {
+    transform: translate(0, -100%) rotate(90deg);
+    transform-origin: bottom left;
+    width: 100vh;
+    display: block;
+  }
+  /deep/ .mat-row {
+    align-items: stretch;
+
+    &.color-active, &.color-active + div,
+    &.color-inactive, &.color-inactive + div,
+    &.color-expired, &.color-expired + div {
+      position: relative;
+      &:before {
+        content: '';
+        display: block;
+        width: 0.5rem;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+    &.color-active:before, &.color-active + div:before {
+      background-color: $primary;
+    };
+    &.color-inactive:before, &.color-inactive + div:before {
+      background-color: $danger;
+    };
+    &.color-expired:before, &.color-expired + div:before {
+      background-color: $expired;
+    };
+  }
+}
+
+.table--pagination {
+  @media print {
+    display: none;
+  }
+}
+
+
+
+.mat-cell.cell-is-selected {
+  border: 1px solid $primary;
+  padding: 0;
+}
+
+.mat-cell {
+  display: flex;
+  align-items: center;
+  padding: 1px;
+  box-sizing: border-box;
+}
+
+
+.mat-header-cell, .mat-cell {
+  padding: 0 5px;
+}
+
+.header-group-row {
+  border: none;
+  align-items: stretch;
+}
+
+.header-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: $primary-light;
+  color: $primary;
+  box-sizing: border-box;
+  text-transform: capitalize;
+}

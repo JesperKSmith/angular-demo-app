@@ -1,0 +1,171 @@
+<mat-table
+  #table
+  [dataSource]="dataSource"
+  matSort
+  (matSortChange)="sortData($event)"
+  class="app-table"
+  [class.overflow-auto]="maxHeight"
+  [ngClass]="{'right-align': rightDirection}"
+  (click)="onTableClick()"
+  [style.max-height]="maxHeight || 'none'"
+  [style.min-height]="minHeight || '0'">
+  <!-- Checkbox Column -->
+  <ng-container matColumnDef="select">
+    <mat-header-cell *matHeaderCellDef>
+      <mat-checkbox
+        class="header-check-box"
+        color="primary"
+        (change)="$event ? selectAllToggle() : null"
+        [checked]="selection.hasValue() && isAllSelected()"
+        [indeterminate]="selection.hasValue() && !isAllSelected()">
+      </mat-checkbox>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <mat-checkbox
+        color="primary"
+        (click)="$event.stopPropagation()"
+        (change)="$event ? selectOneToggle(row) : null"
+        [checked]="selection.isSelected(row)">
+      </mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container *ngFor="let field of itemModel" [matColumnDef]="field.code">
+    <mat-header-cell
+      *matHeaderCellDef
+      class="header-cell"
+      [ngStyle]="getStyle(field)">
+      <span class="column-title d-flex align-items-center" *ngIf="!field.hideHeader">
+        <div *ngIf="field.sortEnable" class="title title--{{field.code}} mr-xs" mat-sort-header>{{field.headerName | uppercase }}</div>
+        <div *ngIf="!field.sortEnable && field.headerName"
+             class="title title--without-sort title--{{field.code}} mr-xs">{{field.headerName | uppercase }}</div>
+        <app-filter-dd-icon
+          *ngIf="field.filterEnable"
+          class="column-icon column-icon--{{field.code}}"
+          (click)="closeAllFilterDd(field.code); $event.stopPropagation();"
+          (change)="columnsFilterDd[field.code] = $event"
+          [inputValue]="columnsControls[field.code].value"
+          [filterActive]="columnsFilterDd[field.code]">
+        </app-filter-dd-icon>
+        <div class="ref-component--header" *ngFor="let ref of componentsHeaderRefs[field.code]">
+          <ng-container *ngTemplateOutlet="ref"></ng-container>
+        </div>
+      </span>
+      <app-column-filter
+        [name]="field.headerName | uppercase"
+        *ngIf="columnsFilterDd[field.code]"
+        class="column-filter column-filter--{{field.code}}"
+        (closeMeEvent)="columnsFilterDd[field.code] = false"
+        (click)="$event.stopPropagation();"
+        [isVisible]="columnsFilterDd[field.code]"
+        [field]="field"
+        [columnControl]="columnsControls[field.code]">
+      </app-column-filter>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let element; let rowIndex = index"
+              [ngStyle]="getStyle(field)"
+              [ngClass]="{'cell-is-selected': (field.code === selectedCell?.code) && (rowIndex === selectedCell?.rowIndex)}"
+              (mousedown)="onCellClick(field.code, rowIndex)"
+              id="{{field.code + '_' + rowIndex}}">
+      <div *ngIf="!field.hideValue" class="table-value-list table-value-list--{{field.type}}" [ngSwitch]="field.type">
+        <span class="table-view-value" *ngSwitchCase="'date'">
+          {{((element[field.code]) | moment | date: 'dd MMM yy') || "&ndash;" }}
+         </span>
+        <span class="table-view-value" *ngSwitchCase="'money'">
+          {{element[field.code] | number: '1.2-2'}} {{element[field.additionalCode]}}
+        </span>
+        <span class="table-view-value" *ngSwitchDefault>
+          {{element[field.code]}}
+        </span>
+      </div>
+      <div class="ref-component" *ngFor="let ref of componentsRefs[field.code]">
+        <ng-container
+          *ngTemplateOutlet="ref; context: {
+          item: element,
+          index: rowIndex,
+          code: field.code,
+          isSelected: isCellFocused && (field.code === selectedCell?.code) && (rowIndex === selectedCell?.rowIndex),
+          pressKey: pressKey}">
+        </ng-container>
+      </div>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Show Expansion -->
+  <ng-container matColumnDef="expandTableBtn">
+    <mat-header-cell *matHeaderCellDef style="flex-basis: 20px"></mat-header-cell>
+    <mat-cell *matCellDef="let row" style="flex-basis: 20px">
+      <mat-icon
+        [ngClass]="{'sms-table-row-expanded': (this.openedRow && this.openedRow.row == row),
+                    'sms-table-row-hidden': !(this.openedRow && this.openedRow.row == row)}"
+        color="primary">
+        keyboard_arrow_down
+      </mat-icon>
+    </mat-cell>
+  </ng-container>
+
+
+  <ng-container *matHeaderRowDef="displayedColumns">
+    <div class="mat-header-row header-group-row" *ngIf="groupColumns.length > 1">
+      <div class="mat-header-cell" *ngFor="let groupColumn of groupColumns"
+           [ngClass]="{'header-group': groupColumn.key && (groupColumn.key !== 'undefined')}"
+           [ngStyle]="{'flex': groupColumn.value.length}"
+           role="columnheader"><span>{{groupColumn.key }}</span></div>
+    </div>
+    <mat-header-row></mat-header-row>
+  </ng-container>
+  <ng-container *matRowDef="let row; columns: displayedColumns; let i = index;">
+    <app-table-row-link [linkConstructor]="rowLinkConstructor" [row]="row">
+      <mat-row
+        rowColor [rowColorMarker]="rowColorMarker" [row]="row" [rowColorMarkerProp]="row[rowColorMarkerProp]"
+        [cdkExpansion]="isSelectable && row" [cdkExpansionTemplate]="expansion"
+        [ngClass]="{'mat-row-selected': selection.isSelected(row), 'row_disabled': disabled, 'cursor-pointer': cursorPointer, 'bg-accent': row.isTkStatus, 'bg-danger': row.isUnStatus}"
+        id="wt-row-{{i}}"
+        (click)="isSelectable && onClickRow(row)"
+        (contextmenu)="isSelectable && onClickRow(row)"
+        (toggleChange)="isSelectable && onToggleChange($event, row)">
+      </mat-row>
+    </app-table-row-link>
+  </ng-container>
+</mat-table>
+
+<div class="table-bottom" *ngIf="!doNotShowSettingsWheel">
+  <div class="pages-filter">
+    <mat-form-field class="transparent" *ngIf="toppingList">
+      <mat-select (openedChange)="selectionOpenedChange($event)" #columnSelect (selectionChange)="selectionColumnChange($event)" [formControl]="toppings" multiple>
+        <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping.headerName}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div [matTooltip]="'hide.columns'" [matTooltipPosition]="'above'" (click)="columnsClick()" class="mat-paginator-page-size-label">
+      <i class="fas fa-cog mr-sm color-gray-1 noselect column-link"></i>
+    </div>
+  </div>
+
+    <div class="d-flex align-items-center pt-xs" *ngIf="allowDownload">
+      <div [matTooltip]="'download_as_csv'" [matTooltipPosition]="'above'" (click)="exportCSV()"
+           class="mat-paginator-page-size-label">
+        <i class="fas fa-download mr-sm color-gray-1 noselect column-link"></i>
+      </div>
+    </div>
+
+
+
+  <mat-paginator
+    class="table--pagination"
+    *ngIf="paginationData"
+    #paginator
+    (page)="emitPageEventFromPaginator($event)"
+    [length]="paginationData.length"
+    [pageIndex]="paginationData.pageIndex"
+    [pageSize]="paginationData.pageSize"
+    [pageSizeOptions]="paginationData.pageSizeOptions">
+  </mat-paginator>
+</div>
+
+<ng-template #expansion let-element>
+  <div class="mat-row" [@detailExpand]
+       style="overflow: hidden" id="expanded-row"
+       *ngFor="let expandedTemplate of componentsRefs['expansion']">
+    <ng-container  *ngTemplateOutlet="expandedTemplate; context: {item: element}"></ng-container>
+  </div>
+</ng-template>

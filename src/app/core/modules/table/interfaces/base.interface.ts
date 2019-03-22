@@ -3,8 +3,7 @@ export interface TableBaseFieldInterface {
   type: string;
   headerName: string;
   hiddenInColumnFilter?: boolean;
-  filterEnable?: boolean;
-  sortEnable?: boolean;
+  sortable?: boolean;
   hideValue?: boolean;
   hideHeader?: boolean;
   width?: string;

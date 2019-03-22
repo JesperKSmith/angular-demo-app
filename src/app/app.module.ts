@@ -10,8 +10,9 @@ import { TestComponent } from './components/test/test.component';
 import { NavigationMenuComponent } from './core/modules/navigation/components/navigation-menu/navigation-menu.component';
 import { TablePageComponent } from './components/pages/table-page/table-page.component';
 import { IntroPageComponent } from './components/pages/intro-page/intro-page.component';
-import { TableModule } from './core/modules/table/table.module';
+// import { TableModule } from './core/modules/table/table.module';
 import { MomentService } from './core/services/moment.service';
+import { MaterialTableModule } from './modules/material-table/material-table.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { MomentService } from './core/services/moment.service';
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    TableModule
+    // TableModule,
+    MaterialTableModule
   ],
   providers: [MomentService],
   bootstrap: [AppComponent]

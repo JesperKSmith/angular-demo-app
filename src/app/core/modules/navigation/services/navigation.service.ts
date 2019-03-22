@@ -28,6 +28,12 @@ export class NavigationService {
             route: 'interfaces'
           },
           {
+            // Testing: What do we test in components, what in services, automated testing preparation
+            name: 'Testing',
+            icon: 'table_chart',
+            route: 'testing'
+          },
+          {
             // EventEmitters, Observables, Subscriptions
             name: 'Communication',
             icon: 'table_chart',
@@ -111,8 +117,7 @@ export class NavigationService {
       {
         name: 'Pipes',
         route: 'pipes'
-      },
-      
+      },      
       {
         name: 'Interceptors',
         route: 'interceptors'

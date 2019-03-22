@@ -19,6 +19,11 @@ export class TablePageComponent implements OnInit {
     this.tableArray = this.getTableData();
   }
 
+  public removeFromTable(item: TableProductInterface): void {
+    console.log('should remove', item);
+    this.tableArray = this.tableArray.filter(entry => entry !== item);
+  }
+  // Data methods - should be exposed from a service and collected through observable
   private getTableData(): TableProductInterface[] {
     return [
       { name: 'Apple', price: 5 },
@@ -33,12 +38,14 @@ export class TablePageComponent implements OnInit {
       {
         code: 'name',
         type: 'string',
-        headerName: 'product name'        
+        headerName: 'product name',
+        sortable: true
       },
       {
         code: 'price',
         type: 'string',
-        headerName: 'price'        
+        headerName: 'price',
+        sortable: true
       },
       {
         code: 'delete',

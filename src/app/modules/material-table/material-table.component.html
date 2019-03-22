@@ -1,0 +1,146 @@
+<mat-form-field *ngIf="filtering">
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+
+<mat-table [dataSource]="dataSource" matSort>
+
+  <ng-container *ngFor="let field of tableModel" [matColumnDef]="field.code">
+    
+    <!-- Table Header START -->
+    <mat-header-cell *matHeaderCellDef class="header-cell" [ngStyle]="getStyle(field)">
+      <span *ngIf="!field.hideHeader" class="column-title d-flex align-items-center">          
+        <div *ngIf="field.sortable else" class="title title--{{field.code}}" mat-sort-header>{{field.headerName}}</div>
+        <div *ngIf="!field.sortable && field.headerName" class="title title--without-sort title--{{field.code}}">{{field.headerName}}</div>
+        <div class="ref-component--header" *ngFor="let ref of componentsHeaderRefs[field.code]">
+          <ng-container *ngTemplateOutlet="ref"></ng-container>
+        </div>
+      </span>
+    </mat-header-cell>
+    <!-- Table Header END -->
+
+    <!-- Table Body START -->
+    <mat-cell *matCellDef="let element; let rowIndex = index" [ngStyle]="getStyle(field)" id="{{field.code + '_' + rowIndex}}">
+      <div *ngIf="!field.hideValue" class="table-value-list table-value-list--{{field.type}}" [ngSwitch]="field.type">
+        <span class="table-view-value" *ngSwitchCase="'date'">
+          {{((element[field.code]) | moment | date: 'dd MMM yy') || "&ndash;" }}
+        </span>
+        <span class="table-view-value" *ngSwitchCase="'money'">
+          {{element[field.code] | number: '1.2-2'}} {{element[field.additionalCode]}}
+        </span>
+        <span class="table-view-value" *ngSwitchDefault>
+          {{element[field.code]}}
+        </span>
+      </div>
+      <div class="ref-component" *ngFor="let ref of componentRefs[field.code]">
+        <ng-container
+          *ngTemplateOutlet="ref; context: {
+            item: element,
+            index: rowIndex,
+            code: field.code}">
+        </ng-container>          
+      </div>
+    </mat-cell>
+    <!-- Table Body END -->      
+  </ng-container>
+
+  <!-- Expansion START -->
+  <ng-container matColumnDef="expandTableBtn">
+    <mat-header-cell *matHeaderCellDef style="flex-basis: 20px"></mat-header-cell>
+    <mat-cell *matCellDef="let row" style="flex-basis: 20px">
+      <mat-icon
+        [ngClass]="{'table-row-expanded': (this.openedRow && this.openedRow.row == row),
+                    'table-row-hidden': !(this.openedRow && this.openedRow.row == row)}"
+        color="primary">
+        keyboard_arrow_down
+      </mat-icon>
+    </mat-cell>
+  </ng-container>
+
+  <!-- ??? -->
+  <ng-container *matHeaderRowDef="displayedColumns">
+    <!-- <div class="mat-header-row header-group-row" *ngIf="groupColumns.length > 1">
+      <div 
+        class="mat-header-cell" *ngFor="let groupColumn of groupColumns"
+        [ngClass]="{'header-group': groupColumn.key && (groupColumn.key !== 'undefined')}"
+        [ngStyle]="{'flex': groupColumn.value.length}" role="columnheader">
+        <span>{{groupColumn.key}}</span>
+      </div>
+    </div> -->
+    <mat-header-row></mat-header-row>      
+  </ng-container>
+  
+  <!-- ??? -->
+  <ng-container *matRowDef="let row; columns: displayedColumns; let i = index;">
+      <mat-row [cdkExpansion]="isSelectable && row" [cdkExpansionTemplate]="expansion"
+        [ngClass]="{'bg-danger': row.danger, 'bg-accent': row.accent}"
+        id="table-row-{{i}}"
+        (click)="isSelectable && onClickRow(row)"
+        (contextmenu)="isSelectable && onClickRow(row)"
+        (toggleChange)="isSelectable && onToggleChange($event, row)">
+      </mat-row>
+  </ng-container>
+</mat-table>
+
+<!-- Table Bottom START -->
+<div class="table-bottom" *ngIf="!hideTableSettings">
+  <!-- <div class="pages-filter">
+    
+    <mat-form-field class="transparent" *ngIf="toppingList">
+      <mat-select #columnSelect (openedChange)="selectionOpenedChange($event)" (selectionChange)="selectionColumnChange($event)" [formControl]="toppings" multiple>
+        <mat-option *ngFor="let entry in toppingList" [value]="topping">{{topping.headerName}}</mat-option>
+      </mat-select>          
+    </mat-form-field>
+
+    <div [matToolTip]="'hide.columns'" [matTooltipPosition]="'above'" (click)="columnsClick()" class="mat-paginator-page-size-label">
+      <mat-icon>settings</mat-icon>
+    </div>
+  </div> -->
+
+  <mat-paginator
+    #paginator
+    *ngIf="pagination"
+    class="table--pagination"
+    (page)="emitPageEventFromPaginator($event)"
+    [pageSize]="pagination"
+    [pageSizeOptions]="itemsPerPageOptions"
+    >
+  </mat-paginator>
+</div>
+
+<ng-template #expansion let-element>
+  <div class="mat-row" [@detailExpand] style="overflow: hidden" id="expanded-row" *ngFor="let expandedTemplate of componentRefs['expansion']">
+    <ng-container *ngTemplateOutlet="expandedTemplate; context: {item: element}"></ng-container>
+  </div>
+</ng-template>
+
+  <!-- Table Bottom END -->
+  
+
+  <!-- ID Column -->
+  <!-- <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+  </ng-container> -->
+
+  <!-- Progress Column -->
+  <!-- <ng-container matColumnDef="progress">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Progress </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.progress}}% </mat-cell>
+  </ng-container> -->
+
+  <!-- Name Column -->
+  <!-- <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+  </ng-container> -->
+
+  <!-- Color Column -->
+  <!-- <ng-container matColumnDef="color">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Color </mat-header-cell>
+    <mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.color}} </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+<!-- </mat-table> -->
+<!-- </div> -->

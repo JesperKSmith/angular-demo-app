@@ -41,6 +41,8 @@ import {
 } from './interfaces/base.interface';
 import { MomentService } from '../../services/moment.service';
 import { TableStateService } from './services/table-state.service';
+import { ViewService } from './services/view.service';
+import { FilterService } from './services/filter.service';
 // import {Subject} from 'rxjs/Subject';
 
 // import {UserService} from '@core/services/user/user.service';
@@ -133,8 +135,8 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
   private readonly DEFAULT_SELECTED_ROW_KEY = 'id';
 
   constructor(
-    // private filterService: FilterService,
-    // private viewService: ViewService,
+    private filterService: FilterService,
+    private viewService: ViewService,
     // private userService: UserService,
     private tableStateService: TableStateService,
     private wtMomentService: MomentService
@@ -147,6 +149,8 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     // this.initErrors();
     this.behaivorInit(true);
     this.dataInit();
+    console.log('table receives model', this.itemModel);
+    console.log('table receives collection', this.itemsCollection);
     // if (this.allowKeyboardNavigation) {
     //   this.initKeyboardListener();
     //   this.initSelectedCell();
@@ -210,16 +214,17 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
     this.groupColumns = this.getGroupColumns(itemModel, 'groupName');
     this.realDataColumns = itemModel && itemModel.map(field => field.code);
-    // this.columnsFilterDd = this.viewService.defineColumnsFilterDd(itemModel);
-    // this.initColumnsControls();
-    // this.displayedColumns = this.viewService.getDisplayedColumns(this.realDataColumns, this.allowMultiSelect, this.allowExpansion);
-    // this.dataSource.filterPredicate = this.filterService.filterPredicate(this.realDataColumns);
+    this.columnsFilterDd = this.viewService.defineColumnsFilterDd(itemModel);
+    this.initColumnsControls();
+    this.displayedColumns = this.viewService.getDisplayedColumns(this.realDataColumns, this.allowMultiSelect, this.allowExpansion);
+    this.dataSource.filterPredicate = this.filterService.filterPredicate(this.realDataColumns);
   }
-  // public initColumnsControls(): void {
-  //   this.columnsControls = Object.keys(this.columnsControls).length > 0
-  //     ? this.columnsControls
-  //     : this.filterService.defineColumnsControls(this.itemModel, this.columnsSubscribtions);
-  // }
+
+  public initColumnsControls(): void {
+    this.columnsControls = Object.keys(this.columnsControls).length > 0
+      ? this.columnsControls
+      : this.filterService.defineColumnsControls(this.itemModel, this.columnsSubscribtions);
+  }
 
   public dataInit(): void {
     this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
@@ -353,9 +358,10 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     }
   }
 
-  // public onTableClick(without?): void {
-  //   this.closeAllFilterDd();
-  // }
+  public onTableClick(without?): void {
+    console.log('clicked element', without);
+    this.closeAllFilterDd();
+  }
 
   public onCellClick(code: string, rowIndex: number): void {
     if (this.allowKeyboardNavigation) {
@@ -368,9 +374,9 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     }
   }
 
-  // public closeAllFilterDd(without?): void {
-  //   this.viewService.closeAllFilterDd(without, this.columnsFilterDd);
-  // }
+  public closeAllFilterDd(without?): void {
+    this.viewService.closeAllFilterDd(without, this.columnsFilterDd);
+  }
 
   public getStyle(cell: TableBaseFieldInterface): {[k: string]: string} {
     let style = {};

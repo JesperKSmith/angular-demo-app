@@ -1,13 +1,18 @@
-<p>
-  table-page works!
-</p>
 
-<app-table 
+<!-- <app-table 
   [itemModel]="itemModel" 
   [itemsCollection]="tableArray" 
   [componentsRefs]="{delete: [deleteCell]}">
 </app-table>
 
 <ng-template #deleteCell let-item="item">
-  <mat-icon (click)="remove(item)">delete</mat-icon>
-</ng-template>
+  <mat-icon (click)="removeFromTable(item)">delete</mat-icon>
+</ng-template> -->
+
+<material-table
+  [tableModel]="itemModel"
+  [tableData]="tableArray"
+  [filtering]="true"
+  [pagination]="10"
+  [itemsPerPageOptions]="[10, 25, 50]"
+></material-table>

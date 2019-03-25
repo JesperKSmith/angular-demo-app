@@ -1,27 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-import { TableBaseFieldInterface } from 'src/app/core/modules/table/interfaces/base.interface';
 import { TableProductInterface } from 'src/app/core/interfaces/table-product.interface';
+import { TableBaseFieldInterface } from 'src/app/modules/material-table/base.interface';
 
 @Component({
   selector: 'app-table-page',
   templateUrl: './table-page.component.html',
-  styleUrls: ['./table-page.component.sass']
+  styleUrls: ['./table-page.component.scss']
 })
 export class TablePageComponent implements OnInit {
 
   public itemModel: TableBaseFieldInterface[];
-  public tableArray: TableProductInterface[];
+  public itemData: TableProductInterface[];
+  private snapshotTableArray: TableProductInterface[];
 
   constructor() { }
 
   ngOnInit() {
     this.itemModel = this.getTableItemModel();
-    this.tableArray = this.getTableData();
+    this.itemData = this.getTableData();
+    this.snapshotTableArray = [...this.itemData];
   }
 
   public removeFromTable(item: TableProductInterface): void {
-    console.log('should remove', item);
-    this.tableArray = this.tableArray.filter(entry => entry !== item);
+    this.itemData = this.itemData.filter(entry => entry !== item);
+    console.log('this.tableArray is now', this.itemData);
+  }
+
+  public restoreTable(): void {
+    this.itemData = this.snapshotTableArray;
   }
   // Data methods - should be exposed from a service and collected through observable
   private getTableData(): TableProductInterface[] {
@@ -43,7 +49,7 @@ export class TablePageComponent implements OnInit {
       },
       {
         code: 'price',
-        type: 'string',
+        type: 'money',
         headerName: 'price',
         sortable: true
       },
@@ -51,6 +57,7 @@ export class TablePageComponent implements OnInit {
         code: 'delete',
         type: 'string',
         headerName: 'delete',
+        sortable: false,
         style: {
           'justify-content': 'flex-end'
         }

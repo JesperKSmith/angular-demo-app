@@ -1,11 +1,9 @@
-import { Component, OnInit, ViewChild, Input, ChangeDetectionStrategy, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import {FormControl} from '@angular/forms';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { SelectionModel } from '@angular/cdk/collections';
 import { TableStateService } from './services/table-state.service';
-import { TableBaseFieldInterface } from 'src/app/core/modules/table/interfaces/base.interface';
 import { TableProductInterface } from 'src/app/core/interfaces/table-product.interface';
+import { TableBaseFieldInterface } from './base.interface';
 
 @Component({
   selector: 'material-table',
@@ -28,12 +26,12 @@ export class MaterialTableComponent implements OnInit {
   @Input() filtering: boolean = false;
   @Input() pagination: number;
   @Input() allowExpansion: boolean = false;
+  @Input() componentRefs: object = {};
+  @Input() componentHeaderRefs: object = {};
 
   // Public variables
   public displayedColumns: string[];
-  public dataSource = new MatTableDataSource();
-
-  
+  public dataSource = new MatTableDataSource();  
 
   // ViewChildren
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -42,12 +40,12 @@ export class MaterialTableComponent implements OnInit {
   constructor(private stateService: TableStateService) { }
 
   ngOnInit() {
-    console.log('mat table receives', [this.tableModel, this.tableData])
-    // this.dataSource = this.stateService.generateUsers();
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
-    this.dataSource.data = this.tableData;
+    this.setupDataSource();    
     this.displayedColumns = this.stateService.extractDisplayedColumns(this.tableModel, this.allowExpansion);
+  }
+
+  ngOnChanges() {
+    this.setupDataSource();
   }
 
   public applyFilter(filterValue: string) {
@@ -62,7 +60,10 @@ export class MaterialTableComponent implements OnInit {
     return style;
   }
 
-  private extractTableModel(): any {}
-  private extractTableData(): any {}
+  private setupDataSource(): void {
+    this.dataSource.data = this.tableData;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
 
 }

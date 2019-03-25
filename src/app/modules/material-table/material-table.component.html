@@ -9,9 +9,9 @@
     <!-- Table Header START -->
     <mat-header-cell *matHeaderCellDef class="header-cell" [ngStyle]="getStyle(field)">
       <span *ngIf="!field.hideHeader" class="column-title d-flex align-items-center">          
-        <div *ngIf="field.sortable else" class="title title--{{field.code}}" mat-sort-header>{{field.headerName}}</div>
-        <div *ngIf="!field.sortable && field.headerName" class="title title--without-sort title--{{field.code}}">{{field.headerName}}</div>
-        <div class="ref-component--header" *ngFor="let ref of componentsHeaderRefs[field.code]">
+        <div *ngIf="field.sortable" class="title title--{{field.code}}" mat-sort-header>{{field.headerName}}</div>
+        <div *ngIf="!field.sortable && field?.headerName" class="title title--without-sort title--{{field?.code}}">{{field?.headerName}}</div>
+        <div class="ref-component--header" *ngFor="let ref of componentHeaderRefs[field.code]">
           <ng-container *ngTemplateOutlet="ref"></ng-container>
         </div>
       </span>
@@ -25,7 +25,7 @@
           {{((element[field.code]) | moment | date: 'dd MMM yy') || "&ndash;" }}
         </span>
         <span class="table-view-value" *ngSwitchCase="'money'">
-          {{element[field.code] | number: '1.2-2'}} {{element[field.additionalCode]}}
+          {{element[field.code] | number: '1.2-2'}} $
         </span>
         <span class="table-view-value" *ngSwitchDefault>
           {{element[field.code]}}
@@ -40,7 +40,7 @@
         </ng-container>          
       </div>
     </mat-cell>
-    <!-- Table Body END -->      
+    <!-- Table Body END --> 
   </ng-container>
 
   <!-- Expansion START -->

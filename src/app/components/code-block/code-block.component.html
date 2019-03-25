@@ -1,0 +1,7 @@
+<div class="code-block">
+  <div *ngFor="let object of jsonData" class="object">
+    <div class="json-key" *ngFor="let entry of object | keyvalue">
+      {{entry.key}}: <span class="json-value">{{ entry.value | json}}</span>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TableBaseFieldInterface } from 'src/app/core/modules/table/interfaces/base.interface';
+import { TableBaseFieldInterface } from '../base.interface';
 
 @Injectable()
 export class TableStateService {

@@ -1,0 +1,19 @@
+.code-block {
+  display:flex;
+  justify-content: space-between;  
+  background-color: darkblue;
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 1rem;
+  padding: 1rem;
+  width: 100%;
+  margin: 1rem;
+  .object {
+  }
+  .json-key {
+    color: lightblue;
+  }
+
+  .json-value {
+    color: lightgreen;
+  }
+}

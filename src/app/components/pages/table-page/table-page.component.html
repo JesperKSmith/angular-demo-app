@@ -1,18 +1,96 @@
+<h1> Reusable Material Table</h1>
 
-<!-- <app-table 
-  [itemModel]="itemModel" 
-  [itemsCollection]="tableArray" 
-  [componentsRefs]="{delete: [deleteCell]}">
-</app-table>
+<div class="table-page__introduction table-page__paragraph">
+  <div style="margin-bottom: 1rem">This component is based on an angular material table, and is build to be reusable.
+  The structure and operations available in the table, is derived from the Input()'s given to the component.</div>
+
+  The component has a few possible inputs, here is a short description of their functionality
+  <ul>
+    <li><span style="font-weight: 700">tableModel</span> - The model of the table, which dictates the data structure of the table</li>
+    <li><span style="font-weight: 700">tableData</span> - The data itself. This is what is populated in the table</li>
+    <li><span style="font-weight: 700">filtering</span> - determines if the table should include an input field to perform filtering on the table</li>
+    <li><span style="font-weight: 700">pagination</span> - decides whether the table should have pagination, and how many entries should be present pr. page by default</li>
+    <li><span style="font-weight: 700">itemsPerPageOptions</span> - Allows the user to manually change items pr page, based on the values in the array inserted</li>
+    <li><span style="font-weight: 700">componentRefs</span> - Gives the developer the oppertunity to inject templates into the table</li>
+  </ul>
+</div>
+
+<div class="table-page__paragraph table-page__fruit-table">
+  <h2>Fruit Example</h2>
+  <material-table
+    [tableModel]="itemModel"
+    [tableData]="itemData"
+    [filtering]="true"
+    [pagination]="10"
+    [itemsPerPageOptions]="[10, 25, 50]"
+    [componentRefs]="{delete: [deleteCell]}"
+  ></material-table>
+  <button (click)="restoreTable()">Restore table data</button>
+  This table makes full use of the features offered by the component. 
+  I will go through them 1 by 1, but first let's take a look at how the component is initialized
+  
+  <h3>Template initialization</h3>
+  The following values are used to initialize the component:
+  <div><span style="font-weight: 700">[tableModel]</span>="itemModel"</div>
+  <div><span style="font-weight: 700">[tableData]</span>="itemData"</div>
+  <div><span style="font-weight: 700">[filtering]</span>="true"</div>
+  <div><span style="font-weight: 700">[pagination]</span>="10"</div>
+  <div><span style="font-weight: 700">[itemsPerPageOptions]</span>="[10, 25, 50]"</div>
+  <div><span style="font-weight: 700">[componentRefs]</span>="{{ '{' }}delete: [deleteCell]{{ '}' }}"</div>
+  
+
+  <h3>tableModel</h3>
+  The tableModel Input() is a json array. In this case, it's an array that has 3 entries, one for each column:
+  <div class="row">
+    <div class="col-md-4">
+      <code-block [jsonData]="itemModel"></code-block>
+    </div>
+  </div>
+
+  Each of these properties has a specific purpose:
+  <ul>
+    <li><span style="font-weight: 700">code</span> - Determines the code that is later used for populating data in the table</li>
+    <li><span style="font-weight: 700">type</span> - The type of data represented in the column. If "string", it will read data in the column as is. If "money", it will add decimals and a currency sign</li>
+    <li><span style="font-weight: 700">headerName</span> - The name which should be displayed on the table header</li>
+    <li><span style="font-weight: 700">sortable</span> - Determines whether sorting should be allowed in a given column</li>
+    <li><span style="font-weight: 700">style</span> - Allows for custom styling, that will only be applied to data in this column</li>
+  </ul>
+
+  <h3>tableData</h3>
+  The tableData Input() is an array of TableProductInterface objects. Each object has a "name" and "price" property:
+  <code-block [jsonData]="itemData"></code-block>
+
+  <h3>filtering</h3>
+  The filtering Input() allows for the developer to inject an input box on top of the table, that can be used for filtering the table.
+  <div>In this case, filtering is set to true to allow for the filtering input field to be present</div>
+
+  <h3>pagination</h3>
+  <div>
+    The Pagination Input(), allows the developer to set a specific amount of entries to be shown per page on the table. It is also used to determine whether pagination should be used on this table.
+  </div>
+  <div>
+    In this case, the pagination was set to "10", which translates to 10 entries pr. Page
+  </div>
+
+  <h3>itemsPerPageOptions</h3>
+  <div>
+    This option allows the developer to determine which options the user will have, to select the amount of entries displayed per page
+  </div>
+  <div>
+    The options invoked in this implementation was [10, 25, 50]
+  </div>
+
+  <h3>componentRefs</h3>
+  <div>
+    This option allows the developer to inject templates to be used for displaying more complex or graphical information
+  </div>
+  <div>
+    For this table, a componentRef with the name "delete" was inserted, which refers to a template that includes an icon, along with a click function used to remove an entry from the table
+  </div>
+</div>
+
+
 
 <ng-template #deleteCell let-item="item">
-  <mat-icon (click)="removeFromTable(item)">delete</mat-icon>
-</ng-template> -->
-
-<material-table
-  [tableModel]="itemModel"
-  [tableData]="tableArray"
-  [filtering]="true"
-  [pagination]="10"
-  [itemsPerPageOptions]="[10, 25, 50]"
-></material-table>
+  <mat-icon (click)="removeFromTable(item)" class="btn__delete">delete</mat-icon>
+</ng-template>

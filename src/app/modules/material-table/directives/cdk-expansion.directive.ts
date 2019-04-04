@@ -1,5 +1,10 @@
 import {Directive, EventEmitter, HostBinding, HostListener, Input, Output, TemplateRef, ViewContainerRef} from '@angular/core';
 
+/**
+   * @name CdkExpansionDirective
+   * @description Directive created to support expandable table rows
+   * @WIP Could use better commenting, missing some interfaces
+*/
 @Directive({
   selector: '[cdkExpansion]'
 })

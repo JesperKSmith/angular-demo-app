@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TableProductInterface } from 'src/app/core/interfaces/table-product.interface';
 import { TableBaseFieldInterface } from 'src/app/modules/material-table/base.interface';
+import { TableStateService } from 'src/app/modules/material-table/services/table-state.service';
 
 @Component({
   selector: 'app-table-page',
@@ -13,7 +14,7 @@ export class TablePageComponent implements OnInit {
   public itemData: TableProductInterface[];
   private snapshotTableArray: TableProductInterface[];
 
-  constructor() { }
+  constructor(private stateService: TableStateService) { }
 
   ngOnInit() {
     this.itemModel = this.getTableItemModel();
@@ -21,14 +22,25 @@ export class TablePageComponent implements OnInit {
     this.snapshotTableArray = [...this.itemData];
   }
 
+  /**
+   * @name removeFromTable
+   * @description Calls the "removeItemFromArray()"" method on the @TableStateService
+   * @param {TableProductInterface} item - The item we want to remove from the table
+   * @return @type {T} - Table after item has been removed
+   */
   public removeFromTable(item: TableProductInterface): void {
-    this.itemData = this.itemData.filter(entry => entry !== item);
-    console.log('this.tableArray is now', this.itemData);
+    this.itemData = this.stateService.removeItemFromArray(item, this.itemData);
   }
 
+  /**
+   * @name restoreTable
+   * @description restores table to it's original state
+   */
   public restoreTable(): void {
     this.itemData = this.snapshotTableArray;
   }
+  
+  // WORKAROUND
   // Data methods - should be exposed from a service and collected through observable
   private getTableData(): TableProductInterface[] {
     return [

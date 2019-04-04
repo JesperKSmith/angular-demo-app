@@ -1,0 +1,26 @@
+{
+    "_key_id": 567065,
+    "_id": 46695,
+    "name": "fruit module",
+    "description": "module to handle fruit API requests",
+    "event_handlers": [
+        {
+            "_id": 45695,
+            "name": "fruit event handler",
+            "event": "js-on-rest",
+            "file": "js-on-rest/fruit-event-handler.js",
+            "output": "blocks-output-lNzYbSgbRuVGTTrIZ8T4.7161516862293269",
+            "path": "fruit",
+            "test": "js-on-rest/test/fruit-event-handler.test.js"
+        },
+        {
+            "_id": 45696,
+            "name": "tester",
+            "event": "js-before-publish",
+            "channels": "hello_world",
+            "file": "js-before-publish/tester.js",
+            "output": "blocks-output-lNzYbSgbRuVGTTrIZ8T4.7655011751054599",
+            "test": "js-before-publish/test/tester.test.js"
+        }
+    ]
+}

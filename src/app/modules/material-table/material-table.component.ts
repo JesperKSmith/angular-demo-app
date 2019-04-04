@@ -40,27 +40,46 @@ export class MaterialTableComponent implements OnInit {
   constructor(private stateService: TableStateService) { }
 
   ngOnInit() {
-    this.setupDataSource();    
+    this.setupDataSource(this.tableData, this.paginator, this.sort);    
     this.displayedColumns = this.stateService.extractDisplayedColumns(this.tableModel, this.allowExpansion);
   }
 
   ngOnChanges() {
-    this.setupDataSource();
+    this.setupDataSource(this.tableData, this.paginator, this.sort);
   }
 
-  public applyFilter(filterValue: string) {
+ /**
+   * @name applyFilter
+   * @description Sets the @filter property on the @MatTableDataSource object to the string value of the @param filterValue  
+   * @param {string} filterValue - the string value desired to be applied to the @dataSource filter property
+*/
+  public applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if(this.dataSource.paginator) { this.dataSource.paginator.firstPage(); }
   }
 
-  public getStyle(cell: TableBaseFieldInterface): {[k: string]: string} {
+  /**
+   * @name getStyle
+   * @description collects styling properties based on the given @param columnModel
+   * @param {TableBaseFieldInterface} columnModel - The column model that holds styling definitions
+   * @returns @WIP
+   * @WIP - Needs interface for return type
+  */
+  public getStyle(columnModel: TableBaseFieldInterface): {[k: string]: string} {
     let style = {};
-    if(cell.width) { style['flex-basis'] = cell.width; }
-    if(cell.style) { style = {...style, ...cell.style} }
+    if(columnModel.width) { style['flex-basis'] = columnModel.width; }
+    if(columnModel.style) { style = {...style, ...columnModel.style} }
     return style;
   }
 
-  private setupDataSource(): void {
+  /**
+   * @name setupDataSource
+   * @description Initializes the needed properties on the @MatTableDataSource object
+   * @param {TableProductInterface[]} tableData - data to be populated in the table
+   * @param {MatPaginator} paginator - The paginator @ViewChild 
+   * @param {MatSort} sort - The sort @ViewChild
+  */
+  private setupDataSource(tableData: TableProductInterface[], paginator: MatPaginator, sort: MatSort): void {
     this.dataSource.data = this.tableData;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

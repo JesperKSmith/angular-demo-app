@@ -6,6 +6,8 @@ import { NavigationMenuComponent } from './components/navigation-menu/navigation
   declarations: [NavigationMenuComponent],
   imports: [
     CommonModule
-  ]
+  ],
+  providers: []
 })
+
 export class NavigationModule { }
